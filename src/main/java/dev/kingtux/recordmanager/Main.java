@@ -2,13 +2,19 @@ package dev.kingtux.recordmanager;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         File file = new File("records");
         if (!file.exists()) {
-            file.mkdir();
+            if (!file.mkdir()) {
+                System.out.println("Failed to create records directory");
+                System.exit(1);
+            }
         }
         if (!file.isDirectory()) {
             System.out.println("records is not a directory");
@@ -27,34 +33,19 @@ public class Main {
         printMenu();
         String input = scanner.nextLine().toLowerCase();
         while (!input.equals("exit")) {
-            switch (input.toLowerCase()) {
-                case "add" -> {
-                    addRecord(scanner, records);
-                }
-                case "remove" -> {
-                    removeRecord(scanner, records);
-                }
-                case "list" -> {
-                    listRecords(records);
-                }
-                case "find_by_artist" -> {
-                    findByArtist(scanner, records);
-                }
-                default -> {
-                    System.out.println("Invalid input");
-                }
+            switch (input) {
+                case "add" -> addRecord(scanner, records);
+                case "remove" -> removeRecord(scanner, records);
+                case "list" -> listRecords(records);
+                case "find_by_artist" -> findByArtist(scanner, records);
+                default -> System.out.println("Invalid input");
             }
             printMenu();
             input = scanner.nextLine().toLowerCase();
-
-
         }
-
-
     }
 
     private static void findByArtist(Scanner scanner, List<Record> records) {
-
         System.out.print("Enter artist name: ");
         String artist = scanner.nextLine();
         records.stream().filter(record -> record.artist().equalsIgnoreCase(artist)).forEach(System.out::println);
@@ -107,11 +98,12 @@ public class Main {
     }
 
     public static void printMenu() {
-        System.out.println("Add: Add a record");
-        System.out.println("List: List Records");
-        System.out.println("Remove: Remove a record");
-        System.out.println("Find_by_artist: Find a record by artist");
-        System.out.println("Exit: Exits the program");
-        System.out.print("Enter a command: ");
+        System.out.print("""
+                Add: Add a record
+                Remove: Remove a record
+                List: List all records
+                Find_by_artist: Find all records by an artist
+                Exit: Exit the program
+                Enter a command:\040""");
     }
 }

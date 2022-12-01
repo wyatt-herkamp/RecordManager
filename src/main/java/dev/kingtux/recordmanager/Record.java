@@ -1,8 +1,6 @@
 package dev.kingtux.recordmanager;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Properties;
 
 public record Record(String title, String artist, int year, dev.kingtux.recordmanager.Record.RecordType type) {
@@ -19,7 +17,9 @@ public record Record(String title, String artist, int year, dev.kingtux.recordma
         properties.setProperty("year", String.valueOf(year));
         properties.setProperty("type", type.name());
 
-        file.createNewFile();
+        if (!file.createNewFile()) {
+            throw new IOException("File already exists");
+        }
         try (FileWriter writer = new FileWriter(file)) {
             properties.store(writer, "Record");
         }
