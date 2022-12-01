@@ -48,12 +48,24 @@ public class Main {
         }
     }
 
+    /**
+     * Finds a record by artist
+     * @param scanner the scanner
+     * @param records the records
+     */
     private static void findByArtist(Scanner scanner, List<Record> records) {
         System.out.print("Enter artist name: ");
         String artist = scanner.nextLine();
         records.stream().filter(record -> record.artist().equalsIgnoreCase(artist)).forEach(System.out::println);
     }
 
+    /**
+     * Removes a record from the records directory
+     *
+     * @param recordsDir the records directory
+     * @param scanner    the scanner
+     * @param records    the records
+     */
     private static void removeRecord(Path recordsDir, Scanner scanner, List<Record> records) {
         System.out.print("Enter the title of the record you want to remove: ");
         String title = scanner.nextLine();
@@ -76,6 +88,14 @@ public class Main {
         System.out.println("No record with that title");
     }
 
+    /**
+     * Creates a new record from user input
+     *
+     * @param recordsDir The directory to save the record to
+     * @param scanner    The scanner to use
+     * @param records    The list of records to add the new record to
+     * @throws IOException If the record fails to save
+     */
     public static void addRecord(Path recordsDir, Scanner scanner, List<Record> records) throws IOException {
         RecordBuilder builder = new RecordBuilder();
         System.out.print("Enter the title of the record: ");
@@ -92,6 +112,9 @@ public class Main {
         records.add(record);
     }
 
+    /**
+     * Prints the Menu of the program
+     */
     public static void printMenu() {
         System.out.print("""
                 List of commands:

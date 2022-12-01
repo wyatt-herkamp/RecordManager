@@ -4,6 +4,14 @@ import java.io.*;
 import java.nio.file.Path;
 import java.util.Properties;
 
+/***
+ * Represents a Vynil Record
+ * @param title the title of the record
+ * @param artist the artist of the record
+ * @param year the year of the record released
+ * @param type the type of the record
+ *
+ */
 public record Record(String title, String artist, int year, dev.kingtux.recordmanager.Record.RecordType type) {
 
     @Override
