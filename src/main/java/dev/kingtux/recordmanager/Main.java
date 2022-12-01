@@ -94,11 +94,12 @@ public class Main {
 
     public static void printMenu() {
         System.out.print("""
-                Add: Add a record
-                Remove: Remove a record
-                List: List all records
-                Find_by_artist: Find all records by an artist
-                Exit: Exit the program
+                List of commands:
+                    Add: Add a record
+                    Remove: Remove a record
+                    List: List all records
+                    Find_by_artist: Find all records by an artist
+                    Exit: Exit the program
                 Enter a command:\040""");
     }
 }
