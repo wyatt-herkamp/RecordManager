@@ -2,6 +2,8 @@ package dev.kingtux.recordmanager;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,7 +11,8 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        File file = new File("records");
+        Path recordsDir = Paths.get("records");
+        File file = recordsDir.toFile();
         if (!file.exists()) {
             if (!file.mkdir()) {
                 System.out.println("Failed to create records directory");
@@ -34,9 +37,9 @@ public class Main {
         String input = scanner.nextLine().toLowerCase();
         while (!input.equals("exit")) {
             switch (input) {
-                case "add" -> addRecord(scanner, records);
-                case "remove" -> removeRecord(scanner, records);
-                case "list" -> listRecords(records);
+                case "add" -> addRecord(recordsDir, scanner, records);
+                case "remove" -> removeRecord(recordsDir, scanner, records);
+                case "list" -> records.forEach(System.out::println);
                 case "find_by_artist" -> findByArtist(scanner, records);
                 default -> System.out.println("Invalid input");
             }
@@ -51,14 +54,13 @@ public class Main {
         records.stream().filter(record -> record.artist().equalsIgnoreCase(artist)).forEach(System.out::println);
     }
 
-    private static void removeRecord(Scanner scanner, List<Record> records) {
+    private static void removeRecord(Path recordsDir, Scanner scanner, List<Record> records) {
         System.out.print("Enter the title of the record you want to remove: ");
         String title = scanner.nextLine();
-        System.out.print("Records " + records.size());
         for (Record record : records) {
             if (record.title().equalsIgnoreCase(title)) {
                 try {
-                    if (record.delete()) {
+                    if (record.delete(recordsDir)) {
                         records.remove(record);
                         System.out.println("Record removed");
                     } else {
@@ -74,13 +76,7 @@ public class Main {
         System.out.println("No record with that title");
     }
 
-    private static void listRecords(List<Record> records) {
-        for (Record record : records) {
-            System.out.println(record);
-        }
-    }
-
-    public static void addRecord(Scanner scanner, List<Record> records) throws IOException {
+    public static void addRecord(Path recordsDir, Scanner scanner, List<Record> records) throws IOException {
         RecordBuilder builder = new RecordBuilder();
         System.out.print("Enter the title of the record: ");
         builder.setTitle(scanner.nextLine());
@@ -91,8 +87,7 @@ public class Main {
         System.out.print("Enter the type of the record " + Record.RecordType.options() + ": ");
         builder.setType(Record.RecordType.valueOf(scanner.nextLine()));
         Record record = builder.createRecord();
-        File file = record.file();
-        record.save(file);
+        record.save(recordsDir);
 
         records.add(record);
     }

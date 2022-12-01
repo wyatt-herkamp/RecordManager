@@ -1,6 +1,7 @@
 package dev.kingtux.recordmanager;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.util.Properties;
 
 public record Record(String title, String artist, int year, dev.kingtux.recordmanager.Record.RecordType type) {
@@ -10,7 +11,8 @@ public record Record(String title, String artist, int year, dev.kingtux.recordma
         return title + " by " + artist + " (" + year + ") " + type;
     }
 
-    public void save(File file) throws IOException {
+    public void save(Path recordDir) throws IOException {
+        File file = file(recordDir).toFile();
         Properties properties = new Properties();
         properties.setProperty("title", title);
         properties.setProperty("artist", artist);
@@ -49,12 +51,12 @@ public record Record(String title, String artist, int year, dev.kingtux.recordma
         }
     }
 
-    public File file() {
-        return new File("records/" + title + ".properties");
+    public Path file(Path recordsDir) {
+        return recordsDir.resolve(title + ".properties");
     }
 
-    public boolean delete() throws IOException {
-        File file = file();
+    public boolean delete(Path recordsDir) throws IOException {
+        File file = file(recordsDir).toFile();
         if (file.exists()) {
             return file.delete();
         } else {
